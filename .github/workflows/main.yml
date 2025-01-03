@@ -19,20 +19,26 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'corretto' # Aquí especificas la distribución de Amazon Corretto
+          distribution: 'corretto' # Amazon Corretto
 
-      # 3. Run the tests
+      # 3. Show AWS environment variables (to check if they are passed correctly)
+      - name: Show AWS environment variables
+        run: |
+          echo "AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}"
+          echo "AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+
+      # 4. Run the tests
       - name: Run tests
         env:
           aws.accessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws.secretKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: mvn test
 
-      # 4. If tests pass, build the JAR
+      # 5. If tests pass, build the JAR
       - name: Build JAR
         run: mvn clean package
 
-      # 5. Upload the JAR to S3
+      # 6. Upload the JAR to S3
       - name: Upload JAR to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
