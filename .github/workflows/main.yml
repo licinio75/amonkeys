@@ -22,6 +22,12 @@ jobs:
           distribution: 'corretto' # Amazon Corretto
 
       # 3. Run the tests with maximum logging (debug mode)
+      - name: Debug Environment Variables
+        env:
+          aws.accessKeyId: ${{ secrets.AWS_ACCESSKEYID }}
+          aws.secretKey: ${{ secrets.AWS_SECRETKEY }}
+        run: printenv | grep aws
+
       - name: Run tests with maximum logging
         env:
           aws.accessKeyId: ${{ secrets.AWS_ACCESSKEYID }}
