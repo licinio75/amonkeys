@@ -30,7 +30,7 @@ jobs:
 
       # 4. If tests pass, build the JAR
       - name: Build JAR
-        run: mvn clean package -X
+        run: mvn clean install -X -Dsettings.security=/dev/null
 
       # 5. Upload the JAR to S3
       - name: Upload JAR to S3
