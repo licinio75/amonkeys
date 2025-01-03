@@ -21,39 +21,21 @@ jobs:
           java-version: '17'
           distribution: 'corretto' # Amazon Corretto
 
-      # 3. Set environment variables for DynamoDB
-      - name: Set AWS DynamoDB environment variables
-        run: |
-          echo "AWS_DYNAMODB_ENDPOINT=http://localhost:8000" >> $GITHUB_ENV
-          echo "AWS_REGION=eu-north-1" >> $GITHUB_ENV
-
-      # 4. Show AWS environment variables (to check if they are passed correctly)
-      - name: Show AWS environment variables
-        run: |
-          echo "AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}"
-          echo "AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-          echo "AWS_DYNAMODB_ENDPOINT: ${{ env.AWS_DYNAMODB_ENDPOINT }}"
-          echo "AWS_REGION: ${{ env.AWS_REGION }}"
-
-      # 5. Run the tests with maximum logging (debug mode)
+      # 3. Run the tests with maximum logging (debug mode)
       - name: Run tests with maximum logging
         env:
-          aws.accessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws.secretKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DYNAMODB_ENDPOINT: ${{ env.AWS_DYNAMODB_ENDPOINT }}
-          AWS_REGION: ${{ env.AWS_REGION }}
+          aws.accessKeyId: ${{ secrets.AWS_ACCESSKEYID }}
+          aws.secretKey: ${{ secrets.AWS_SECRETKEY }}
         run: mvn clean test -X
 
-      # 6. If tests pass, build the JAR
+      # 4. If tests pass, build the JAR
       - name: Build JAR
         run: mvn clean package -X
 
-      # 7. Upload the JAR to S3
+      # 5. Upload the JAR to S3
       - name: Upload JAR to S3
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DYNAMODB_ENDPOINT: ${{ env.AWS_DYNAMODB_ENDPOINT }}
-          AWS_REGION: ${{ env.AWS_REGION }}
+          aws.accessKeyId: ${{ secrets.AWS_ACCESSKEYID }}
+          aws.secretKey: ${{ secrets.AWS_SECRETKEY }}
         run: |
           aws s3 cp target/amonkeys-0.0.1-SNAPSHOT.jar s3://amonkeys-photos/
