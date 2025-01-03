@@ -19,6 +19,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
+          distribution: 'corretto' # Aquí especificas la distribución de Amazon Corretto
 
       # 3. Run the tests
       - name: Run tests
@@ -34,4 +35,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws s3 cp target/your_app.jar s3://amonkeys-photos/
+          aws s3 cp target/amonkeys-0.0.1-SNAPSHOT.jar s3://amonkeys-photos/
