@@ -1,0 +1,37 @@
+name: Build, Test and Deploy to S3
+
+on:
+  push:
+    branches:
+      - main # Triggered only on push to the main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the source code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Set up Java 17
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
+      # 3. Run the tests
+      - name: Run tests
+        run: mvn test
+
+      # 4. If tests pass, build the JAR
+      - name: Build JAR
+        run: mvn clean package
+
+      # 5. Upload the JAR to S3
+      - name: Upload JAR to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 cp target/your_app.jar s3://amonkeys-photos/
