@@ -165,11 +165,20 @@ public class CustomerController {
     }
 
 
-    @Operation(summary = "View Customer Photo", description = "View customer photo by key.", security = { @SecurityRequirement(name = "oauth2") })
+    @Operation(
+        summary = "View Customer Photo",
+        description = "View customer photo by bucket name and photo name.",
+        security = { @SecurityRequirement(name = "oauth2") }
+    )
     @GetMapping("/api/customers/photo")
-    public ResponseEntity<?> viewPhoto(@RequestParam String key, @AuthenticationPrincipal OidcUser principal) {
+    public ResponseEntity<?> viewPhoto(
+        @RequestParam String bucketName, 
+        @RequestParam String photo, 
+        @AuthenticationPrincipal OidcUser principal
+    ) {
         try {
-            String presignedUrl = s3Service.generatePresignedUrl(s3BucketName, key, principal);
+            String key = bucketName + "/" + photo;
+            String presignedUrl = s3Service.generatePresignedUrl(bucketName, key, principal);
             return ResponseEntity.ok(presignedUrl);
         } catch (SecurityException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
@@ -178,6 +187,7 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
         }
     }
+    
 
     @Operation(summary = "List all customers", description = "Fetches a list of all customers.", security = {@SecurityRequirement(name = "oauth2")})
     @GetMapping("/api/customers")
@@ -219,7 +229,7 @@ public class CustomerController {
                     if (customerOptional.isPresent()) {
                         Customer customer = customerOptional.get();
                         if (customer.getPhoto() != null) {
-                            String photoKey = customer.getPhoto().substring(customer.getPhoto().indexOf("photos/"));
+                            String photoKey = customer.getPhoto().substring(customer.getPhoto().indexOf(s3BucketName+"/"));
                             String presignedUrl = s3Service.generatePresignedUrl(s3BucketName, photoKey, principal);
                             customer.setPhoto(presignedUrl);
                         }
