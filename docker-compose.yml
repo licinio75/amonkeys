@@ -4,10 +4,9 @@ services:
     container_name: dynamodb-local
     ports:
       - "8000:8000"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal"
     volumes:
-      - dynamodb-data:/home/dynamodblocal/data
-    environment:
-      - JAVA_OPTS=-Djava.library.path=/home/dynamodblocal/DynamoDBLocal_lib
+      - dynamodb-data:/home/dynamodblocal
 
   minio:
     image: minio/minio
@@ -23,5 +22,5 @@ services:
       - minio-data:/data
 
 volumes:
-  dynamodb-data: {}
-  minio-data: {}
+  dynamodb-data:
+  minio-data:
