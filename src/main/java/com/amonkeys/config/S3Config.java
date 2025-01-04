@@ -24,10 +24,10 @@ public class S3Config {
     @Value("${aws.s3.endpoint}")
     private String s3Endpoint;
 
-    @Value("${AWS_ACCESS_KEY_ID}")
+    @Value("${aws.s3.accessKeyId}")
     private String s3AccessKeyId;
 
-    @Value("${AWS_SECRET_ACCESS_KEY}")
+    @Value("${aws.s3.secretKey}")
     private String s3SecretKey;
 
     @Value("${aws.region}")
