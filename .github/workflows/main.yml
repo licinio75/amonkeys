@@ -23,7 +23,7 @@ jobs:
 
       # 3. Run the tests with maximum logging (debug mode)
       - name: Create empty settings-security.xml
-        run: echo "<settingsSecurity></settingsSecurity>" > ~/.m2/settings-security.xml
+        run: echo "<settingsSecurity><master></master></settingsSecurity>" > ~/.m2/settings-security.xml
       - name: Run tests with maximum logging
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
