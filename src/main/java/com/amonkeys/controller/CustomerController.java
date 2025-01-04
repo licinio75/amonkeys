@@ -155,7 +155,7 @@ public class CustomerController {
                 RequestBody.fromBytes(photo.getBytes()));
 
         logger.info("Photo uploaded to S3 with key: {}", key);
-        return String.format("%s/%s/%s", s3Endpoint, bucketName, key);
+        return key;
     }
 
     private String cleanFileName(String fileName) {
@@ -167,18 +167,17 @@ public class CustomerController {
 
     @Operation(
         summary = "View Customer Photo",
-        description = "View customer photo by bucket name and photo name.",
+        description = "View customer photo by photo name.",
         security = { @SecurityRequirement(name = "oauth2") }
     )
     @GetMapping("/api/customers/photo")
     public ResponseEntity<?> viewPhoto(
-        @RequestParam String bucketName, 
         @RequestParam String photo, 
         @AuthenticationPrincipal OidcUser principal
     ) {
         try {
-            String key = bucketName + "/" + photo;
-            String presignedUrl = s3Service.generatePresignedUrl(bucketName, key, principal);
+            String key = s3BucketName + "/" + photo;
+            String presignedUrl = s3Service.generatePresignedUrl(s3BucketName, key, principal);
             return ResponseEntity.ok(presignedUrl);
         } catch (SecurityException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
@@ -229,8 +228,8 @@ public class CustomerController {
                     if (customerOptional.isPresent()) {
                         Customer customer = customerOptional.get();
                         if (customer.getPhoto() != null) {
-                            String photoKey = customer.getPhoto().substring(customer.getPhoto().indexOf(s3BucketName+"/"));
-                            String presignedUrl = s3Service.generatePresignedUrl(s3BucketName, photoKey, principal);
+                            String photoKey = customer.getPhoto();
+                            String presignedUrl = s3Service.generatePresignedUrl(s3BucketName, s3BucketName+"/"+photoKey, principal);
                             customer.setPhoto(presignedUrl);
                         }
                         return ResponseEntity.ok(customer);
