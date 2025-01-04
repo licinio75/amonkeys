@@ -52,3 +52,12 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           aws s3 cp target/amonkeys-0.0.1-SNAPSHOT.jar s3://amonkeys-photos/
+
+      # Paso 6: Connect y Deploy to EC2
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i C:/Users/licin/.ssh/amonkeys.pem ec2-user@$(aws ec2 describe-instances --query "Reservations[0].Instances[0].PublicIpAddress" --output text) << 'EOF'
+            cd /home/ec2-user
+            aws s3 cp s3://amonkeys-photos/amonkeys-0.0.1-SNAPSHOT.jar /home/ec2-user/amonkeys-0.0.1-SNAPSHOT.jar
+            java -jar /home/ec2-user/amonkeys-0.0.1-SNAPSHOT.jar &
+          EOF
