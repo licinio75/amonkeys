@@ -24,14 +24,14 @@ jobs:
       # 3. Run the tests with maximum logging (debug mode)
       - name: Debug Environment Variables
         env:
-          aws.accessKeyId: ${{ secrets.AWS_ACCESSKEYID }}
-          aws.secretKey: ${{ secrets.AWS_SECRETKEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: printenv | grep aws
 
       - name: Run tests with maximum logging
         env:
-          aws.accessKeyId: ${{ secrets.AWS_ACCESSKEYID }}
-          aws.secretKey: ${{ secrets.AWS_SECRETKEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: mvn clean test -X
 
       # 4. If tests pass, build the JAR
@@ -41,7 +41,7 @@ jobs:
       # 5. Upload the JAR to S3
       - name: Upload JAR to S3
         env:
-          aws.accessKeyId: ${{ secrets.AWS_ACCESSKEYID }}
-          aws.secretKey: ${{ secrets.AWS_SECRETKEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           aws s3 cp target/amonkeys-0.0.1-SNAPSHOT.jar s3://amonkeys-photos/

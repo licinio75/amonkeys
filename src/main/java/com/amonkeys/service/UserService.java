@@ -30,10 +30,10 @@ public class UserService {
     @Value("${aws.region}")
     private String awsRegion;
 
-    @Value("${aws.accessKeyId}")
+    @Value("${AWS_ACCESS_KEY_ID}")
     private String awsAccessKeyId;
 
-    @Value("${aws.secretKey}")
+    @Value("${AWS_SECRET_ACCESS_KEY}")
     private String awsSecretKey;
 
     private DynamoDbEnhancedClient enhancedClient;
