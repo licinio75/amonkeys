@@ -77,29 +77,38 @@ public class CustomerController {
             if (principal != null) {
                 String userEmail = principal.getEmail();
                 Optional<User> userOptional = userService.findUserByEmail(userEmail);
-
+    
                 if (userOptional.isPresent()) {
                     User user = userOptional.get();
-
+    
                     // Check required fields
                     if (name == null || name.isEmpty() || surname == null || surname.isEmpty()) {
                         return ResponseEntity.badRequest().body("Name and surname fields are required");
                     }
-
+    
+                    // Check if the email is already taken
+                    if (email != null && !email.isEmpty()) {
+                        Optional<Customer> existingCustomer = customerService.findCustomerByEmail(email);
+                        if (existingCustomer.isPresent()) {
+                            return ResponseEntity.badRequest().body("A customer with this email already exists.");
+                        }
+                    }
+    
                     // Validate photo
-                    if (!photo.isEmpty()) {
+                    if (photo != null && !photo.isEmpty()) {
                         String fileName = photo.getOriginalFilename();
                         String fileExtension = getFileExtension(fileName);
-
+    
                         if (!Arrays.asList(allowedExtensions).contains(fileExtension.toLowerCase())) {
                             return ResponseEntity.badRequest().body("Invalid file type. Only " + String.join(", ", allowedExtensions) + " are allowed.");
                         }
-
+    
                         if (photo.getSize() > maxPhotoSize) {
                             return ResponseEntity.badRequest().body("File too large. Maximum size is " + maxPhotoSize + " bytes.");
                         }
                     }
-
+    
+                    // Create customer
                     Customer customer = Customer.builder()
                             .id(UUID.randomUUID().toString())
                             .name(name)
@@ -111,7 +120,7 @@ public class CustomerController {
                             .updatedAt(null)
                             .updatedBy(null)
                             .build();
-
+    
                     return ResponseEntity.ok(customerService.saveCustomer(customer));
                 }
             }
@@ -127,6 +136,7 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
         }
     }
+    
 
     private String getFileExtension(String fileName) {
         if (fileName != null && fileName.contains(".")) {
@@ -308,23 +318,33 @@ public class CustomerController {
                     if (customerOptional.isPresent()) {
                         Customer customer = customerOptional.get();
     
-                        // Update customer details
+                        // Check if email is being updated
+                        if (email != null && !email.equals(customer.getEmail())) {
+                            // Check if there's already a customer with the new email (excluding the current customer)
+                            Optional<Customer> existingCustomer = customerService.findCustomerByEmail(email);
+                            if (existingCustomer.isPresent()) {
+                                return ResponseEntity.badRequest().body("A customer with this email already exists.");
+                            }
+                            // Update email if it's not already taken
+                            customer.setEmail(email);
+                        }
+    
+                        // Update other fields
                         if (name != null) customer.setName(name);
                         if (surname != null) customer.setSurname(surname);
-                        if (email != null) customer.setEmail(email);
     
                         // Handle photo update
                         if (photo != null && !photo.isEmpty()) {
                             String fileExtension = getFileExtension(photo.getOriginalFilename());
-
+    
                             if (!Arrays.asList(allowedExtensions).contains(fileExtension.toLowerCase())) {
                                 return ResponseEntity.badRequest().body("Invalid file type. Only " + String.join(", ", allowedExtensions) + " are allowed.");
                             }
-
+    
                             if (photo.getSize() > maxPhotoSize) {
                                 return ResponseEntity.badRequest().body("File too large. Maximum size is " + maxPhotoSize + " bytes.");
                             }
-
+    
                             String oldPhotoKey = customer.getPhoto() != null ? customer.getPhoto().substring(customer.getPhoto().lastIndexOf("/") + 1) : null;
     
                             String newPhotoKey = uploadPhotoToS3(photo);
@@ -363,6 +383,7 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update customer.");
         }
     }
+    
     
 
 

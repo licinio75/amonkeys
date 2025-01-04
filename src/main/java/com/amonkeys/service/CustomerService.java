@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.amonkeys.entity.Customer;
+import com.amonkeys.entity.User;
 
 import jakarta.annotation.PostConstruct;
 
@@ -74,6 +75,11 @@ public class CustomerService {
         DynamoDbTable<Customer> table = enhancedClient.table("customers", TableSchema.fromBean(Customer.class));
         Customer customer = table.getItem(Key.builder().partitionValue(id).build());
         return Optional.ofNullable(customer);
+    }
+
+    public Optional<Customer> findCustomerByEmail(String email) {
+        DynamoDbTable<Customer> table = enhancedClient.table("customers", TableSchema.fromBean(Customer.class));
+        return table.scan().items().stream().filter(customer -> customer.getEmail().equals(email)).findAny();
     }
 
     public void deleteCustomerById(String id) {
