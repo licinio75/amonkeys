@@ -61,6 +61,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-north-1
 
+      # 7. Deploy to EC2
       - name: Deploy to EC2
         run: |
           mkdir -p ~/.ssh
@@ -80,11 +81,20 @@ jobs:
             # Verify if the JAR file is present
             if [ -f /home/ec2-user/amonkeys-0.0.1-SNAPSHOT.jar ]; then
               echo "File found, proceeding with execution."
-              java -jar /home/ec2-user/amonkeys-0.0.1-SNAPSHOT.jar &
+
+              # Run the JAR file in the background using nohup
+              nohup java -jar /home/ec2-user/amonkeys-0.0.1-SNAPSHOT.jar > amonkeys.log 2>&1 &
+              
+              # Verify if the Java process is running
+              sleep 5
+              if ps aux | grep -v grep | grep "amonkeys-0.0.1-SNAPSHOT.jar"; then
+                echo "Application is running."
+              else
+                echo "Error: Application is not running!"
+                exit 1
+              fi
             else
               echo "Error: File not found!"
               exit 1
             fi
           EOF
-
-
