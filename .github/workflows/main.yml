@@ -21,14 +21,14 @@ jobs:
           java-version: '17'
           distribution: 'corretto' # Amazon Corretto
 
-      # 3. Run the tests with maximum logging (debug mode)
+      # 3. Run the tests
       - name: Create minimal settings.xml
         run: echo "<settings></settings>" > ~/.m2/settings.xml
 
       - name: Create empty settings-security.xml
         run: echo "<settingsSecurity><master></master></settingsSecurity>" > ~/.m2/settings-security.xml
 
-      - name: Run tests with maximum logging
+      - name: Run tests
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -68,8 +68,20 @@ jobs:
           echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/amonkeys.pem
           chmod 600 ~/.ssh/amonkeys.pem
 
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/amonkeys.pem ec2-user@$(aws ec2 describe-instances --region eu-north-1 --query "Reservations[0].Instances[0].PublicIpAddress" --output text) << 'EOF'
+          # Verify the public IP of the EC2 instance
+          EC2_PUBLIC_IP=$(aws ec2 describe-instances --region eu-north-1 --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
+
+          # Establish the SSH connection and verify if the JAR file was copied correctly
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/amonkeys.pem ec2-user@${EC2_PUBLIC_IP} << 'EOF'
             cd /home/ec2-user
-            aws s3 cp s3://amonkeys-photos/amonkeys-0.0.1-SNAPSHOT.jar /home/ec2-user/amonkeys-0.0.1-SNAPSHOT.jar
-            java -jar /home/ec2-user/amonkeys-0.0.1-SNAPSHOT.jar &
+
+            # Verify if the JAR file is present
+            if [ -f /home/ec2-user/amonkeys-0.0.1-SNAPSHOT.jar ]; then
+              echo "File found, proceeding with execution."
+              java -jar /home/ec2-user/amonkeys-0.0.1-SNAPSHOT.jar &
+            else
+              echo "Error: File not found!"
+              exit 1
+            fi
           EOF
+
