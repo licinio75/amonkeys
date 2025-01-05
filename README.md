@@ -68,17 +68,17 @@ Visit [Google Cloud Console](https://cloud.google.com/)
 1. Build the project with Maven:
    You can build the project with:
    ```bash
-   mvn clean install
+   mvn clean install -D spring.profiles.active=local
    ```
 
 2. Run tests
    ```bash
-   mvn test
+   mvn test -D spring.profiles.active=local
    ```   
 
 3. Run the application locally:
    ```bash
-   mvn spring-boot:run
+   mvn spring-boot:run -D spring-boot.run.arguments="--spring.profiles.active=local"
    ```
    
 4. Verify Everything is Working:
