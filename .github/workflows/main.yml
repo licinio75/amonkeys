@@ -88,8 +88,9 @@ jobs:
               echo "File found, proceeding with execution."
 
               # Run the JAR file in the background using nohup
-              nohup java -jar /home/ec2-user/amonkeys-0.0.1-SNAPSHOT.jar > amonkeys.log 2>&1 &
-              
+              nohup java -jar /home/ec2-user/amonkeys-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod > amonkeys.log 2>&1 &
+
+
               # Verify if the Java process is running
               sleep 5
               if ps aux | grep -v grep | grep "amonkeys-0.0.1-SNAPSHOT.jar"; then
