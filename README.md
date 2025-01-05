@@ -8,6 +8,7 @@ Amonkeys is a Java-based web application designed to interact with DynamoDB and 
 Before running this project locally, make sure you have the following tools installed:
 
 - **Java 17** or higher.
+- **Maven** for building and managing dependencies.
 - **Docker** for containerized environments.
 - **AWS CLI** configured for local DynamoDB and S3 access (for development).
 - **Git** for version control.
@@ -20,69 +21,90 @@ Before running this project locally, make sure you have the following tools inst
    cd amonkeys
    ```
 2. Install and configure aws cli
+   Follow the instructions at [AWS CLI Installation Guide](https://aws.amazon.com/cli/)
    ```bash
-   https://aws.amazon.com/cli/
    aws configure
    ```
 3. Run Docker containers (DynamoDB Local & Minio):
-- Ensure Docker is running on your machine.
-- Start DynamoDB Local and Minio using Docker Compose:
+Ensure Docker is running on your machine.
+Start DynamoDB Local and Minio using Docker Compose:
    ```bash
    docker-compose up
    ```
-   This will start DynamoDB on http://localhost:8000 and Minio on http://localhost:9000.
+This will start DynamoDB on http://localhost:8000 and Minio on http://localhost:9000.
 
-- Create tables and insert initial admin user (modify admin email and name on init.sh file)
+4. Create tables and insert the initial admin user
+Modify admin email and name on init.sh file
    ```bash
    ./init.sh
    ```
 
-4. Configure Google Cloud for OAuth 2.0
-   ```bash
-   https://cloud.google.com/
-   ```
+5. Configure Google Cloud for OAuth 2.0
+Visit [Google Cloud Console](https://cloud.google.com/)
+   
 
-5. Create a new file src/main/resources/application-secrets.properties
+6. Create a new file src/main/resources/application-secrets.properties with the sensitive information
       ```bash
       # Amazon Dynamodb sensitive configuration
-      AWS_ACCESS_KEY_ID=XXXXXXXXX     #(get from aws configure) 
-      AWS_SECRET_ACCESS_KEY=XXXXXXXXX #(get from aws configure)
+      AWS_ACCESS_KEY_ID=XXXXXXXXX     #(obtained  from aws configure) 
+      AWS_SECRET_ACCESS_KEY=XXXXXXXXX #(obtained  from aws configure)
       
       # Amazon S3 sensitive configuration
-      aws.s3.accessKeyId=minioadmin #(get from docker-compose.yml MINIO_ROOT_USER)
-      aws.s3.secretKey=minioadmin   #(get from docker-compose.yml MINIO_ROOR_PASSWORD)
+      aws.s3.accessKeyId=minioadmin #(from docker-compose.yml MINIO_ROOT_USER)
+      aws.s3.secretKey=minioadmin   #(from docker-compose.yml MINIO_ROOR_PASSWORD)
 
       # OAuth2 sensitive configuration
-      spring.security.oauth2.client.registration.google.client-id=XXXXXXXXXXXXXX   #(get from Google Cloud)
-      spring.security.oauth2.client.registration.google.client-secret=XXXXXXXXXXX  #(get from Google Cloud)
+      spring.security.oauth2.client.registration.google.client-id=XXXXXXXXXXXXXX   #(obtained  from Google Cloud)
+      spring.security.oauth2.client.registration.google.client-secret=XXXXXXXXXXX  #(obtained  from Google Cloud)
       ```
 
-6. Build the project with Maven:
-   If you have Maven installed, you can build the project with:
+
+## Build and Run the Project
+1. Build the project with Maven:
+   You can build the project with:
    ```bash
    mvn clean install
    ```
 
-   You can run tests
+2. Run tests
    ```bash
    mvn test
    ```   
 
-   Run the application locally:
+3. Run the application locally:
    ```bash
    mvn spring-boot:run
    ```
    
-7. Check if everything works:
-   Open a browser and visit
+4. Verify Everything is Working:
+   - Open a browser and visit
    ```bash
    http://localhost:8080/api/users
    ```
-   You will need to authenticate with Google (with the same email you put on init.sh file)
-   You will see the list of users.
+   - Authenticate with Google using the email specified in the init.sh file.
+   - If successful, you will see the list of users.
 
-Usage
-API Endpoints
+
+##Usage
+For detailed usage instructions and available API endpoints, refer to the Postman documentation:
+
+[Postman API Documentation](https://documenter.getpostman.com/view/10832843/2sAYJ9AJ9y)
+
+You can explore the endpoints and even import the collection directly into your Postman environment.
+
+
+
+
+
+
+
+
+
+
+
+
+TODO LIST
+
 
 AWS Configuration
 
