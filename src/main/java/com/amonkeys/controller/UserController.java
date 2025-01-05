@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -35,36 +34,36 @@ public class UserController {
 
     @Operation(summary = "Get all users", description = "Retrieve a list of all users.", security = {@SecurityRequirement(name = "oauth2")})
     @GetMapping("/api/users")
-    public List<User> getAllUsers(@AuthenticationPrincipal OidcUser principal) {
+    public ResponseEntity<?> getAllUsers(@AuthenticationPrincipal OidcUser principal) {
         try {
             if (principal != null) {
                 String email = principal.getEmail();
                 Optional<User> userOptional = userService.findUserByEmail(email);
-
+    
                 if (userOptional.isPresent()) {
                     User user = userOptional.get();
                     if (user.getIsAdmin()) {
                         // Fetch all users except those marked as deleted
-                        return userService.findAllUsers().stream()
+                        return ResponseEntity.ok(userService.findAllUsers().stream()
                                           .filter(u -> Boolean.FALSE.equals(u.getIsDeleted())) 
-                                          .collect(Collectors.toList());
+                                          .collect(Collectors.toList()));
                     } else {
-                        throw new AccessDeniedException("You do not have the correct roles.");
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not authorized.");
                     }
+                } else {
+                    // If user is not found
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not authorized.");
                 }
+            } else {
+                // If principal is null
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not authorized.");
             }
-            throw new BadCredentialsException("User authentication failed.");
-        } catch (BadCredentialsException ex) {
-            logger.error("Authentication error: ", ex);
-            throw ex;
-        } catch (AccessDeniedException ex) {
-            logger.error("Access denied: ", ex);
-            throw ex;
         } catch (Exception ex) {
             logger.error("Unexpected error: ", ex);
-            throw new RuntimeException("An unexpected error occurred.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
         }
     }
+    
 
     @Operation(summary = "Create a new user", description = "Create a new user. Only administrators can create new users.", security = {@SecurityRequirement(name = "oauth2")})
     @PostMapping("/api/users")
