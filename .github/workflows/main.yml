@@ -36,8 +36,7 @@ jobs:
           AWS_S3_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
           SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-
-        run: mvn clean test
+        run: mvn clean test -Dspring.profiles.active=prod
 
       # 4. If tests pass, build the JAR
       - name: Build JAR
@@ -48,7 +47,7 @@ jobs:
           AWS_S3_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
           SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-        run: mvn clean install -Dsettings.security=/dev/null
+        run: mvn clean install -Dsettings.security=/dev/null -Dspring.profiles.active=prod
 
       # 5. Upload the JAR to S3
       - name: Upload JAR to S3
