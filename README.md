@@ -50,14 +50,19 @@ Visit [Google Cloud Console](https://cloud.google.com/)
       AWS_SECRET_ACCESS_KEY=XXXXXXXXX #(obtained  from aws configure)
       
       # Amazon S3 sensitive configuration
-      aws.s3.accessKeyId=minioadmin #(from docker-compose.yml MINIO_ROOT_USER)
-      aws.s3.secretKey=minioadmin   #(from docker-compose.yml MINIO_ROOR_PASSWORD)
+      AWS_S3_ACCESS_KEY_ID=minioadmin #(from docker-compose.yml MINIO_ROOT_USER)
+      AWS_S3_SECRET_ACCESS_KEY=minioadmin   #(from docker-compose.yml MINIO_ROOR_PASSWORD)
 
       # OAuth2 sensitive configuration
       spring.security.oauth2.client.registration.google.client-id=XXXXXXXXXXXXXX   #(obtained  from Google Cloud)
       spring.security.oauth2.client.registration.google.client-secret=XXXXXXXXXXX  #(obtained  from Google Cloud)
       ```
+7. 
+   In the files
+      src/main/resources/application-local.properties
+      src/main/resources/application-prod.properties
 
+   There are non-sensitive variables for their respective environments.
 
 ## Build and Run the Project
 1. Build the project with Maven:
