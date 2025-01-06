@@ -99,6 +99,7 @@ public class CustomerController {
                     }
     
                     // Validate photo
+                    System.out.println("photo:"+photo);
                     if (photo != null && !photo.isEmpty()) {
                         System.out.println("photo:"+photo);
                         String fileName = photo.getOriginalFilename();
