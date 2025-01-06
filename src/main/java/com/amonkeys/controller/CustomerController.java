@@ -74,18 +74,22 @@ public class CustomerController {
                                             @RequestParam(value="email", required=false) String email,
                                             @RequestParam(value="photo", required=false) MultipartFile photo) {
         try {
+
+            System.out.println("Create a new customer");
+
             if (principal != null) {
                 String userEmail = principal.getEmail();
+                System.out.println("userEmail:"+userEmail);
                 Optional<User> userOptional = userService.findUserByEmail(userEmail);
     
                 if (userOptional.isPresent()) {
                     User user = userOptional.get();
-    
+                    System.out.println("name:"+name);
                     // Check required fields
                     if (name == null || name.isEmpty() || surname == null || surname.isEmpty()) {
                         return ResponseEntity.badRequest().body("Name and surname fields are required");
                     }
-    
+                    System.out.println("email:"+email);
                     // Check if the email is already taken
                     if (email != null && !email.isEmpty()) {
                         Optional<Customer> existingCustomer = customerService.findCustomerByEmail(email);
@@ -96,6 +100,7 @@ public class CustomerController {
     
                     // Validate photo
                     if (photo != null && !photo.isEmpty()) {
+                        System.out.println("photo:"+photo);
                         String fileName = photo.getOriginalFilename();
                         String fileExtension = getFileExtension(fileName);
     
@@ -148,8 +153,10 @@ public class CustomerController {
     private String uploadPhotoToS3(MultipartFile photo) throws IOException {
         String bucketName = s3BucketName;
         String key =  UUID.randomUUID().toString() + "-" + cleanFileName(photo.getOriginalFilename());
-
+        System.out.println("bucketName"+bucketName);
         // Check if bucket exists, if not, create it
+        System.out.println("s3Endpoint"+s3Endpoint);
+        
         try {
             s3Client.headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
         } catch (NoSuchBucketException e) {
