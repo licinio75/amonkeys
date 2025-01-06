@@ -120,7 +120,7 @@ public class CustomerController {
                             .name(name)
                             .surname(surname)
                             .email(email)
-                            .photo(photo.isEmpty() ? null : uploadPhotoToS3(photo))
+                            .photo((photo==null || photo.isEmpty()) ? null : uploadPhotoToS3(photo))
                             .createdAt(java.time.Instant.now().toString())
                             .createdBy(user.getId())
                             .updatedAt(null)
