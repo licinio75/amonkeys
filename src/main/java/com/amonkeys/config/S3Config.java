@@ -45,20 +45,12 @@ public class S3Config {
 
 
         if ("local".equals(activeProfile)) {
-            System.out.println("??????????????????? s3AccessKeyId:"+s3AccessKeyId);
-            System.out.println("??????????????????? s3SecretKey:"+s3SecretKey);
-            // If credentials are configured (local), we use them
+            // If local, we use configured credentials
             return StaticCredentialsProvider.create(
                     AwsBasicCredentials.create(s3AccessKeyId, s3SecretKey)
             );
         } else {
-
-            DefaultCredentialsProvider credentialsProvider = DefaultCredentialsProvider.create();
-        
-            System.out.println("??????????????????? Access Key ID: " + credentialsProvider.resolveCredentials().accessKeyId());
-            System.out.println("??????????????????? Secret Access Key: " + credentialsProvider.resolveCredentials().secretAccessKey());
-     
-            // If no credentials (production), we use the default credentials provider (IAM roles)
+            // If production, we use the default credentials provider (IAM roles)
             return StaticCredentialsProvider.create(DefaultCredentialsProvider.create().resolveCredentials());
         }
     }
@@ -67,7 +59,7 @@ public class S3Config {
     public S3Client s3Client() {
         return S3Client.builder()
                 .endpointOverride(URI.create(s3Endpoint))
-                .credentialsProvider(getCredentialsProvider()) // Use the helper method here
+                .credentialsProvider(getCredentialsProvider())
                 .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
                 .region(Region.of(awsRegion))
                 .build();
@@ -77,7 +69,7 @@ public class S3Config {
     public S3Presigner s3Presigner() {
         try {
             return S3Presigner.builder()
-                    .credentialsProvider(getCredentialsProvider()) // Use the helper method here
+                    .credentialsProvider(getCredentialsProvider())
                     .region(Region.of(awsRegion))
                     .endpointOverride(URI.create(s3Endpoint))
                     .build();
