@@ -20,13 +20,13 @@ Before running this project locally, make sure you have the following tools inst
    git clone https://github.com/licinio75/amonkeys.git
    cd amonkeys
    ```
-2. Install and configure aws cli
+2. Install and configure aws cli  
    Follow the instructions at [AWS CLI Installation Guide](https://aws.amazon.com/cli/)
    ```bash
    aws configure
    ```
-3. Run Docker containers (DynamoDB Local & Minio):
-Ensure Docker is running on your machine.
+3. Run Docker containers (DynamoDB Local & Minio):  
+Ensure Docker is running on your machine.  
 Start DynamoDB Local and Minio using Docker Compose:
    ```bash
    docker-compose up
@@ -66,7 +66,7 @@ Visit [Google Cloud Console](https://cloud.google.com/)
    There are non-sensitive variables in those files.
 
 ## Build and Run the Project
-1. Build the project with Maven:
+1. Build the project with Maven:  
    You can build the project with:
    ```bash
    mvn clean install -D spring.profiles.active=local
@@ -106,15 +106,15 @@ You can explore the endpoints and even import the collection directly into your 
 # 1. AWS Infrastructure Setup
 To deploy and manage the required AWS resources for the application, we use Terraform. Terraform allows you to define and provision AWS resources in a consistent and automated way.
 
-Steps for Running Terraform
-Install Terraform
-If you don't have Terraform installed, you can download it from the official website:
+Steps for Running Terraform  
+Install Terraform  
+If you don't have Terraform installed, you can download it from the official website:  
 [Terraform Installation Guide](https://www.terraform.io/)
 
-Modify the Terraform Configuration
+Modify the Terraform Configuration  
 Open the main.tf file located in the root of the repository. In this file, you'll find configuration values for the AWS resources. Ensure to modify the administrator's user details (e.g., email and name) to match your desired values.
 
-Run Terraform to Create the Infrastructure
+Run Terraform to Create the Infrastructure  
 Once you've modified the configuration, you can run Terraform to provision the resources by executing the following commands in your terminal:
 
 ```bash
@@ -125,7 +125,7 @@ Once you've modified the configuration, you can run Terraform to provision the r
 # 2. CI/CD Pipeline with GitHub Actions
 The goal of this CI/CD pipeline is to automate the build, test, and deployment process every time code is pushed to the main branch. This includes compiling the project, running tests, uploading the JAR to an S3 bucket, copying it to an EC2 instance, and running the application.
 
-1. CI/CD Workflow Steps:
+1. CI/CD Workflow Steps:  
 Checkout the Code: This step checks out your repository and ensures that the code is pulled from the correct branch (usually main).
 
 2. Set Up Java: Use Amazon Corretto (Java 17) to compile your Spring Boot project.
