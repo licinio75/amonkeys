@@ -94,7 +94,7 @@ public class CustomerController {
                     if (email != null && !email.isEmpty()) {
                         System.out.println("before findCustomerByEmail");
                         Optional<Customer> existingCustomer = customerService.findCustomerByEmail(email);
-                        System.out.println("after findCustomerByEmail");
+                        System.out.println("existingCustomer:"+existingCustomer);
                         if (existingCustomer.isPresent()) {
                             return ResponseEntity.badRequest().body("A customer with this email already exists.");
                         }
@@ -115,7 +115,7 @@ public class CustomerController {
                             return ResponseEntity.badRequest().body("File too large. Maximum size is " + maxPhotoSize + " bytes.");
                         }
                     }
-    
+                    System.out.println("before Customer.builder");
                     // Create customer
                     Customer customer = Customer.builder()
                             .id(UUID.randomUUID().toString())
