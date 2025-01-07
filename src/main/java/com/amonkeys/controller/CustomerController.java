@@ -76,35 +76,30 @@ public class CustomerController {
                                             @RequestParam(value="photo", required=false) MultipartFile photo) {
         try {
 
-            System.out.println("Create a new customer");
-
             if (principal != null) {
                 String userEmail = principal.getEmail();
-                System.out.println("userEmail:"+userEmail);
                 Optional<User> userOptional = userService.findUserByEmail(userEmail);
     
                 if (userOptional.isPresent()) {
                     User user = userOptional.get();
-                    System.out.println("name:"+name);
+
                     // Check required fields
                     if (name == null || name.isEmpty() || surname == null || surname.isEmpty()) {
                         return ResponseEntity.badRequest().body("Name and surname fields are required");
                     }
-                    System.out.println("email:"+email);
+
                     // Check if the email is already taken
                     if (email != null && !email.isEmpty()) {
-                        System.out.println("before findCustomerByEmail");
+
                         Optional<Customer> existingCustomer = customerService.findCustomerByEmail(email);
-                        System.out.println("existingCustomer:"+existingCustomer);
+
                         if (existingCustomer.isPresent()) {
                             return ResponseEntity.badRequest().body("A customer with this email already exists.");
                         }
                     }
     
                     // Validate photo
-                    System.out.println("photo1:"+photo);
                     if (photo != null && !photo.isEmpty()) {
-                        System.out.println("photo2:"+photo);
                         String fileName = photo.getOriginalFilename();
                         String fileExtension = getFileExtension(fileName);
     
@@ -116,7 +111,7 @@ public class CustomerController {
                             return ResponseEntity.badRequest().body("File too large. Maximum size is " + maxPhotoSize + " bytes.");
                         }
                     }
-                    System.out.println("before Customer.builder");
+
                     // Create customer
                     Customer customer = Customer.builder()
                             .id(UUID.randomUUID().toString())
@@ -157,21 +152,16 @@ public class CustomerController {
     private String uploadPhotoToS3(MultipartFile photo) throws IOException {
         String bucketName = s3BucketName;
         String key =  UUID.randomUUID().toString() + "-" + cleanFileName(photo.getOriginalFilename());
-        System.out.println("bucketName"+bucketName);
+
         // Check if bucket exists, if not, create it
-        System.out.println("s3Endpoint"+s3Endpoint);
-        
         try {
             s3Client.headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
         } catch (NoSuchBucketException e) {
             logger.warn("Bucket {} does not exist. Creating bucket.", bucketName, e);
             s3Client.createBucket(CreateBucketRequest.builder().bucket(bucketName).build());
         } catch (S3Exception e) {
-            System.err.println("Error Code: " + e.awsErrorDetails().errorCode());
-            System.err.println("Error Message: " + e.awsErrorDetails().errorMessage());
-            System.err.println("Request ID: " + e.requestId());
-            System.err.println("Extended Request ID: " + e.awsErrorDetails().sdkHttpResponse().headers().get("x-amz-id-2"));
-            throw e; // Re-throw if necessary
+            logger.error(e.getMessage());
+            throw e;
         }
 
         // Upload the file to S3
