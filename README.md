@@ -58,9 +58,9 @@ Visit [Google Cloud Console](https://cloud.google.com/)
       spring.security.oauth2.client.registration.google.client-secret=XXXXXXXXXXX  #(obtained  from Google Cloud)
       ```
 7. 
-   In the files
-      src/main/resources/application-local.properties
-      src/main/resources/application-prod.properties
+   In the files  
+      src/main/resources/application-local.properties  
+      src/main/resources/application-prod.properties  
 
    There are non-sensitive variables for their respective environments.
 
@@ -90,7 +90,7 @@ Visit [Google Cloud Console](https://cloud.google.com/)
    - If successful, you will see the list of users.
 
 
-## Usage
+# Usage
 
 For detailed usage instructions and available API endpoints, refer to the Postman documentation:
 
@@ -142,10 +142,10 @@ Ensure that you store your sensitive information in GitHub Secrets to avoid expo
 
 [Using Secrets in GitHub Actions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions)
 
-AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY
-AWS_S3_ACCESS_KEY_ID
-AWS_S3_SECRET_ACCESS_KEY
-GOOGLE_CLIENT_ID
-GOOGLE_CLIENT_SECRET
+AWS_ACCESS_KEY_ID  
+AWS_SECRET_ACCESS_KEY  
+AWS_S3_ACCESS_KEY_ID  
+AWS_S3_SECRET_ACCESS_KEY  
+GOOGLE_CLIENT_ID  
+GOOGLE_CLIENT_SECRET  
 EC2_SSH_PRIVATE_KEY
