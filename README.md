@@ -139,10 +139,12 @@ Checkout the Code: This step checks out your repository and ensures that the cod
 6. Deploy to EC2: Once the JAR is uploaded, SSH into the EC2 instance and transfer the JAR file from S3 to the instance. Finally, run the application on EC2.
 
 3. GitHub Secrets Configuration
-Ensure that you store your sensitive information in GitHub Secrets to avoid exposing it in the workflow configuration. For example:
+Ensure that you store your sensitive information in GitHub Secrets to avoid exposing it in the workflow configuration.
 
 [Using Secrets in GitHub Actions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions)
 
+   You must create these secrets variables:  
+   
   - ##AWS_ACCESS_KEY_ID  
   - ##AWS_SECRET_ACCESS_KEY  
    Description: These keys are used to access AWS services such as DynamoDB or SQS.
@@ -174,22 +176,22 @@ Ensure that you store your sensitive information in GitHub Secrets to avoid expo
   - ##EC2_SSH_PRIVATE_KEY  
    Description: Private key to access your EC2 instance via SSH.  
    
-   Create a Key Pair in AWS:  
-   
-   Go to the EC2 console in AWS.  
-   In the left-hand menu, under Network & Security, select Key Pairs.  
-   Click on Create Key Pair.  
-   Enter a name for your key pair (e.g., ec2-key).  
-   Choose the desired key format (.pem for OpenSSH or .ppk for PuTTY).  
-   Click Create Key Pair.  
-   Download the Private Key:  
-   
-   AWS will automatically generate the key pair and provide the option to download the private key (.pem or .ppk) at this point.  
-   Important Note: This is the only time you can download the private key. Make sure to save it in a secure location.  
-   Assign the Key to Your EC2 Instance:  
-   
-   During the process of launching your EC2 instance, select the newly created key pair in the Key pair (login) section.  
-   Use the Private Key:  
-   
-   Use the downloaded private key file as the value for the EC2_SSH_PRIVATE_KEY variable.
+      Create a Key Pair in AWS:  
+      
+      Go to the EC2 console in AWS.  
+      In the left-hand menu, under Network & Security, select Key Pairs.  
+      Click on Create Key Pair.  
+      Enter a name for your key pair (e.g., ec2-key).  
+      Choose the desired key format (.pem for OpenSSH or .ppk for PuTTY).  
+      Click Create Key Pair.  
+      Download the Private Key:  
+      
+      AWS will automatically generate the key pair and provide the option to download the private key (.pem or .ppk) at this point.  
+      Important Note: This is the only time you can download the private key. Make sure to save it in a secure location.  
+      Assign the Key to Your EC2 Instance:  
+      
+      During the process of launching your EC2 instance, select the newly created key pair in the Key pair (login) section.  
+      Use the Private Key:  
+      
+      Use the downloaded private key file as the value for the EC2_SSH_PRIVATE_KEY variable.
 
