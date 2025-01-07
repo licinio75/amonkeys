@@ -100,22 +100,52 @@ You can explore the endpoints and even import the collection directly into your 
 
 
 
+# Automating Infrastructure and CI/CD Pipeline for Amonkeys
 
+# 1. AWS Infrastructure Setup
+To deploy and manage the required AWS resources for the application, we use Terraform. Terraform allows you to define and provision AWS resources in a consistent and automated way.
 
+Steps for Running Terraform
+Install Terraform
+If you don't have Terraform installed, you can download it from the official website:
+[Terraform Installation Guide](https://www.terraform.io/)
 
+Modify the Terraform Configuration
+Open the main.tf file located in the root of the repository. In this file, you'll find configuration values for the AWS resources. Ensure to modify the administrator's user details (e.g., email and name) to match your desired values.
 
+Run Terraform to Create the Infrastructure
+Once you've modified the configuration, you can run Terraform to provision the resources by executing the following commands in your terminal:
 
+```bash
+   terraform init
+   terraform apply
+```
 
+# 2. CI/CD Pipeline with GitHub Actions
+The goal of this CI/CD pipeline is to automate the build, test, and deployment process every time code is pushed to the main branch. This includes compiling the project, running tests, uploading the JAR to an S3 bucket, copying it to an EC2 instance, and running the application.
 
+1. CI/CD Workflow Steps:
+Checkout the Code: This step checks out your repository and ensures that the code is pulled from the correct branch (usually main).
 
+2. Set Up Java: Use Amazon Corretto (Java 17) to compile your Spring Boot project.
 
-TODO LIST
+3. Run Tests: Execute unit and integration tests using Maven to ensure the project is working as expected. You can use environment variables for sensitive data like AWS credentials.
 
+4. Build the JAR: If the tests pass, compile the application and package it into a JAR file.
 
-AWS Configuration
+5. Upload the JAR to S3: Upload the JAR file to an S3 bucket where it can be accessed by the EC2 instance.
 
-CI/CD Integration
+6. Deploy to EC2: Once the JAR is uploaded, SSH into the EC2 instance and transfer the JAR file from S3 to the instance. Finally, run the application on EC2.
 
+3. GitHub Secrets Configuration
+Ensure that you store your sensitive information in GitHub Secrets to avoid exposing it in the workflow configuration. For example:
 
+[Using Secrets in GitHub Actions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions)
 
-   
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+AWS_S3_ACCESS_KEY_ID
+AWS_S3_SECRET_ACCESS_KEY
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+EC2_SSH_PRIVATE_KEY
