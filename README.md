@@ -1,7 +1,7 @@
 # amonkeys
 API Test - The CRM service
 
-Amonkeys is a Java-based web application designed to interact with DynamoDB and S3 for storing user and customer data. The application is built using Spring Boot, leveraging AWS SDK for services like DynamoDB and S3. This project provides basic user and customer management, authentication, and file storage.
+Amonkeys is a Java-based web application designed to interact with DynamoDB and S3 for storing user and customer data. The application is built using Spring Boot, leveraging AWS SDK for services like DynamoDB and S3. This project provides basic user and customer management, Google OAuth 2.0 authentication, and file storage.
 
 ## Prerequisites
 
@@ -34,12 +34,13 @@ Start DynamoDB Local and Minio using Docker Compose:
 This will start DynamoDB on http://localhost:8000 and Minio on http://localhost:9000.
 
 4. Create tables and insert the initial admin user
-Modify admin email and name on init.sh file
+Modify admin email and name on init.sh file  
+This administrator's email will be the one you need to log in to Google.
    ```bash
    ./init.sh
    ```
 
-5. Configure Google Cloud for OAuth 2.0
+5. Configure Google Cloud for OAuth 2.0  
 Visit [Google Cloud Console](https://cloud.google.com/)
    
 
@@ -58,11 +59,11 @@ Visit [Google Cloud Console](https://cloud.google.com/)
       spring.security.oauth2.client.registration.google.client-secret=XXXXXXXXXXX  #(obtained  from Google Cloud)
       ```
 7. 
-   In the files  
+   There are two profiles in Spring Boot, one for local (local) and another for production (prod). Each profile has its own properties file, respectively.  
       src/main/resources/application-local.properties  
       src/main/resources/application-prod.properties  
 
-   There are non-sensitive variables for their respective environments.
+   There are non-sensitive variables in those files.
 
 ## Build and Run the Project
 1. Build the project with Maven:
