@@ -193,8 +193,7 @@ public class CustomerController {
         @AuthenticationPrincipal OidcUser principal
     ) {
         try {
-            String key = s3BucketName + "/" + photo;
-            String presignedUrl = s3Service.generatePresignedUrl(s3BucketName, key, principal);
+            String presignedUrl = s3Service.generatePresignedUrl(s3BucketName, photo, principal);
             return ResponseEntity.ok(presignedUrl);
         } catch (SecurityException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
@@ -245,8 +244,8 @@ public class CustomerController {
                     if (customerOptional.isPresent()) {
                         Customer customer = customerOptional.get();
                         if (customer.getPhoto() != null) {
-                            String photoKey = customer.getPhoto();
-                            String presignedUrl = s3Service.generatePresignedUrl(s3BucketName, s3BucketName+"/"+photoKey, principal);
+                            String photo = customer.getPhoto();
+                            String presignedUrl = s3Service.generatePresignedUrl(s3BucketName, photo, principal);
                             customer.setPhoto(presignedUrl);
                         }
                         return ResponseEntity.ok(customer);

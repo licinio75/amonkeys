@@ -38,6 +38,12 @@ public class S3Service {
             if (principal != null) {
                 String email = principal.getAttribute("email");
                 Optional<User> userOptional = userService.findUserByEmail(email);
+
+                //on minio (local) key = bucket + photo
+                if (System.getProperty("spring.profiles.active").equals("local")) {
+                    key = bucketName + "/" + key;
+                }
+
                 // Check if user is registered
                 if (userOptional.isPresent()) {
                     GetObjectRequest getObjectRequest = GetObjectRequest.builder()
