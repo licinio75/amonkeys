@@ -143,53 +143,53 @@ Ensure that you store your sensitive information in GitHub Secrets to avoid expo
 
 [Using Secrets in GitHub Actions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions)
 
-##AWS_ACCESS_KEY_ID  
-##AWS_SECRET_ACCESS_KEY  
-Description: These keys are used to access AWS services such as DynamoDB or SQS.
-How to obtain them:
-Log in to the AWS Management Console.
-Go to IAM (Identity and Access Management).
-Create a new user with the necessary permissions (e.g., AmazonDynamoDBFullAccess or AmazonSQSFullAccess).
-Generate access keys (Access Key and Secret Key) for the user.  
-We won´t use them on production environment
-
-  
-##AWS_S3_ACCESS_KEY_ID  
-##AWS_S3_SECRET_ACCESS_KEY  
-Description: These keys are used to access Minio (local)
-You can obtain them from docker-compose.yml  
-We won´t use them on production environment
-
-
-##GOOGLE_CLIENT_ID  
-##GOOGLE_CLIENT_SECRET  
-Description: These credentials are required for integrating Google authentication.
-How to obtain them:  
-Log in to the Google Cloud Platform (GCP) Console.  
-Create a new project or use an existing one.  
-Navigate to APIs & Services > Credentials.  
-Create credentials of type OAuth 2.0 Client ID.  
-Copy the client_id and client_secret values.
-
-##EC2_SSH_PRIVATE_KEY  
-Description: Private key to access your EC2 instance via SSH.  
-
-Create a Key Pair in AWS:  
-
-Go to the EC2 console in AWS.  
-In the left-hand menu, under Network & Security, select Key Pairs.  
-Click on Create Key Pair.  
-Enter a name for your key pair (e.g., ec2-key).  
-Choose the desired key format (.pem for OpenSSH or .ppk for PuTTY).  
-Click Create Key Pair.  
-Download the Private Key:  
-
-AWS will automatically generate the key pair and provide the option to download the private key (.pem or .ppk) at this point.  
-Important Note: This is the only time you can download the private key. Make sure to save it in a secure location.  
-Assign the Key to Your EC2 Instance:  
-
-During the process of launching your EC2 instance, select the newly created key pair in the Key pair (login) section.  
-Use the Private Key:  
-
-Use the downloaded private key file as the value for the EC2_SSH_PRIVATE_KEY variable.
+  - ##AWS_ACCESS_KEY_ID  
+  - ##AWS_SECRET_ACCESS_KEY  
+   Description: These keys are used to access AWS services such as DynamoDB or SQS.
+   How to obtain them:
+   Log in to the AWS Management Console.
+   Go to IAM (Identity and Access Management).
+   Create a new user with the necessary permissions (e.g., AmazonDynamoDBFullAccess or AmazonSQSFullAccess).
+   Generate access keys (Access Key and Secret Key) for the user.  
+   We won´t use them on production environment
+   
+     
+  - ##AWS_S3_ACCESS_KEY_ID  
+  - ##AWS_S3_SECRET_ACCESS_KEY  
+   Description: These keys are used to access Minio (local)
+   You can obtain them from docker-compose.yml  
+   We won´t use them on production environment
+   
+   
+  - ##GOOGLE_CLIENT_ID  
+  - ##GOOGLE_CLIENT_SECRET  
+   Description: These credentials are required for integrating Google authentication.
+   How to obtain them:  
+   Log in to the Google Cloud Platform (GCP) Console.  
+   Create a new project or use an existing one.  
+   Navigate to APIs & Services > Credentials.  
+   Create credentials of type OAuth 2.0 Client ID.  
+   Copy the client_id and client_secret values.
+   
+  - ##EC2_SSH_PRIVATE_KEY  
+   Description: Private key to access your EC2 instance via SSH.  
+   
+   Create a Key Pair in AWS:  
+   
+   Go to the EC2 console in AWS.  
+   In the left-hand menu, under Network & Security, select Key Pairs.  
+   Click on Create Key Pair.  
+   Enter a name for your key pair (e.g., ec2-key).  
+   Choose the desired key format (.pem for OpenSSH or .ppk for PuTTY).  
+   Click Create Key Pair.  
+   Download the Private Key:  
+   
+   AWS will automatically generate the key pair and provide the option to download the private key (.pem or .ppk) at this point.  
+   Important Note: This is the only time you can download the private key. Make sure to save it in a secure location.  
+   Assign the Key to Your EC2 Instance:  
+   
+   During the process of launching your EC2 instance, select the newly created key pair in the Key pair (login) section.  
+   Use the Private Key:  
+   
+   Use the downloaded private key file as the value for the EC2_SSH_PRIVATE_KEY variable.
 
