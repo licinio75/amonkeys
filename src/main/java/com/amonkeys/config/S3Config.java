@@ -11,9 +11,11 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 import java.net.URI;
 
@@ -34,11 +36,17 @@ public class S3Config {
     @Value("${AWS_S3_SECRET_ACCESS_KEY:}")  // Default value is empty
     private String s3SecretKey;
 
+    @Autowired
+    private Environment environment;
+
     // Helper method to get the credentials provider
     private StaticCredentialsProvider getCredentialsProvider() {
-        System.out.println("??????????????????? s3AccessKeyId:"+s3AccessKeyId);
-        System.out.println("??????????????????? s3SecretKey:"+s3SecretKey);
-        if (!s3AccessKeyId.isEmpty() && !s3SecretKey.isEmpty()) {
+        String activeProfile = environment.getProperty("spring.profiles.active");
+
+
+        if ("local".equals(activeProfile)) {
+            System.out.println("??????????????????? s3AccessKeyId:"+s3AccessKeyId);
+            System.out.println("??????????????????? s3SecretKey:"+s3SecretKey);
             // If credentials are configured (local), we use them
             return StaticCredentialsProvider.create(
                     AwsBasicCredentials.create(s3AccessKeyId, s3SecretKey)
@@ -50,8 +58,6 @@ public class S3Config {
             System.out.println("??????????????????? Access Key ID: " + credentialsProvider.resolveCredentials().accessKeyId());
             System.out.println("??????????????????? Secret Access Key: " + credentialsProvider.resolveCredentials().secretAccessKey());
      
-
-
             // If no credentials (production), we use the default credentials provider (IAM roles)
             return StaticCredentialsProvider.create(DefaultCredentialsProvider.create().resolveCredentials());
         }
@@ -59,10 +65,6 @@ public class S3Config {
 
     @Bean
     public S3Client s3Client() {
-
-        System.out.println("??????????????????? s3Endpoint:"+s3Endpoint);
-        System.out.println("??????????????????? s3Region:"+awsRegion);
-
         return S3Client.builder()
                 .endpointOverride(URI.create(s3Endpoint))
                 .credentialsProvider(getCredentialsProvider()) // Use the helper method here
