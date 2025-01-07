@@ -92,16 +92,18 @@ public class CustomerController {
                     System.out.println("email:"+email);
                     // Check if the email is already taken
                     if (email != null && !email.isEmpty()) {
+                        System.out.println("before findCustomerByEmail");
                         Optional<Customer> existingCustomer = customerService.findCustomerByEmail(email);
+                        System.out.println("after findCustomerByEmail");
                         if (existingCustomer.isPresent()) {
                             return ResponseEntity.badRequest().body("A customer with this email already exists.");
                         }
                     }
     
                     // Validate photo
-                    System.out.println("photo:"+photo);
+                    System.out.println("photo1:"+photo);
                     if (photo != null && !photo.isEmpty()) {
-                        System.out.println("photo:"+photo);
+                        System.out.println("photo2:"+photo);
                         String fileName = photo.getOriginalFilename();
                         String fileExtension = getFileExtension(fileName);
     
