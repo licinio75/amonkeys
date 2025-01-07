@@ -40,7 +40,8 @@ public class S3Service {
                 Optional<User> userOptional = userService.findUserByEmail(email);
 
                 //on minio (local) key = bucket + photo
-                if (System.getProperty("spring.profiles.active").equals("local")) {
+                String activeProfile = System.getProperty("spring.profiles.active");
+                if ("local".equals(activeProfile)) {
                     key = bucketName + "/" + key;
                 }
 
