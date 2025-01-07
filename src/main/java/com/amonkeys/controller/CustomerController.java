@@ -14,6 +14,7 @@ import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import org.slf4j.Logger;
@@ -165,6 +166,12 @@ public class CustomerController {
         } catch (NoSuchBucketException e) {
             logger.warn("Bucket {} does not exist. Creating bucket.", bucketName, e);
             s3Client.createBucket(CreateBucketRequest.builder().bucket(bucketName).build());
+        } catch (S3Exception e) {
+            System.err.println("Error Code: " + e.awsErrorDetails().errorCode());
+            System.err.println("Error Message: " + e.awsErrorDetails().errorMessage());
+            System.err.println("Request ID: " + e.requestId());
+            System.err.println("Extended Request ID: " + e.awsErrorDetails().sdkHttpResponse().headers().get("x-amz-id-2"));
+            throw e; // Re-throw if necessary
         }
 
         // Upload the file to S3
