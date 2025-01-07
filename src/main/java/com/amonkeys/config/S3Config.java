@@ -36,8 +36,8 @@ public class S3Config {
 
     // Helper method to get the credentials provider
     private StaticCredentialsProvider getCredentialsProvider() {
-        System.out.println("s3AccessKeyId:"+s3AccessKeyId);
-        System.out.println("s3SecretKey:"+s3SecretKey);
+        System.out.println("??????????????????? s3AccessKeyId:"+s3AccessKeyId);
+        System.out.println("??????????????????? s3SecretKey:"+s3SecretKey);
         if (!s3AccessKeyId.isEmpty() && !s3SecretKey.isEmpty()) {
             // If credentials are configured (local), we use them
             return StaticCredentialsProvider.create(
@@ -47,8 +47,8 @@ public class S3Config {
 
             DefaultCredentialsProvider credentialsProvider = DefaultCredentialsProvider.create();
         
-            System.out.println("Access Key ID: " + credentialsProvider.resolveCredentials().accessKeyId());
-            System.out.println("Secret Access Key: " + credentialsProvider.resolveCredentials().secretAccessKey());
+            System.out.println("??????????????????? Access Key ID: " + credentialsProvider.resolveCredentials().accessKeyId());
+            System.out.println("??????????????????? Secret Access Key: " + credentialsProvider.resolveCredentials().secretAccessKey());
      
 
 
@@ -60,8 +60,8 @@ public class S3Config {
     @Bean
     public S3Client s3Client() {
 
-        System.out.println("s3Endpoint:"+s3Endpoint);
-        System.out.println("s3Region:"+awsRegion);
+        System.out.println("??????????????????? s3Endpoint:"+s3Endpoint);
+        System.out.println("??????????????????? s3Region:"+awsRegion);
 
         return S3Client.builder()
                 .endpointOverride(URI.create(s3Endpoint))
