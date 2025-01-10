@@ -32,6 +32,34 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Operation(summary = "Login user", description = "Login using Google authentication. Verifies if the email exists in the database.", security = {@SecurityRequirement(name = "oauth2")})
+    @GetMapping("/api/login")
+    public ResponseEntity<?> login(@AuthenticationPrincipal OidcUser principal) {
+        try {
+            if (principal != null) {
+                String email = principal.getEmail(); // Get email from Google authentication
+                
+                if (email == null || email.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email from Google authentication.");
+                }
+    
+                Optional<User> userOptional = userService.findUserByEmail(email);
+                
+                if (userOptional.isPresent()) {
+                    return ResponseEntity.ok(userOptional.get()); // Return the user if found
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with the given email does not exist.");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Google authentication failed.");
+            }
+        } catch (Exception ex) {
+            logger.error("Unexpected error during login: ", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        }
+    }
+    
+
     @Operation(summary = "Get all users", description = "Retrieve a list of all users.", security = {@SecurityRequirement(name = "oauth2")})
     @GetMapping("/api/users")
     public ResponseEntity<?> getAllUsers(@AuthenticationPrincipal OidcUser principal) {
